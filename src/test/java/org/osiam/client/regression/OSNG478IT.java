@@ -27,14 +27,21 @@ import com.github.springtestdbunit.annotation.DatabaseTearDown;
 public class OSNG478IT extends AbstractIntegrationTestBase {
 
     @Test
-    public void search_and_sort(){
+    public void search_and_sort() {
         Query query = new QueryBuilder()
-                        .ascending("name.givenName")
-                        .build();
-        
-        
+                .ascending("userName")
+                .build();
+
         SCIMSearchResult<User> result = this.oConnector.searchUsers(query, accessToken);
+        assertEquals(2, result.getTotalResults());
+        assertEquals(result.getTotalResults(), result.getResources().size());
         
+        query = new QueryBuilder()
+                .descending("name.givenName")
+                .build();
+
+        result = this.oConnector.searchUsers(query, accessToken);
+
         assertEquals(2, result.getTotalResults());
         assertEquals(result.getTotalResults(), result.getResources().size());
     }
